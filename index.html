@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Features best practices, and more!</title>
+
+    <meta name="description" content="Features best practices, and more!">
+    <meta name="author" content="Factorial GmbH">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/factorial.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+var link = document.createElement( 'link' );
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+      <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <div class="logo">
+        Factorial
+      </div>
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+
+
+        <section>
+          <section>
+            <div style="position: relative; height: 270px;">
+              <div style="width: 160px; height: 224px; position: absolute; left: 50%; top: 0; margin-left: -80px; ">
+                <div id="Logo"></div>
+              </div>
+            </div>
+            <h2>Lean development <br> in a fluid environment</h2>
+          </section>
+          <section>
+            <h2>
+              Factorial ist ein Entwicklungsstudio aus Hamburg.
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Wir arbeiten Hand in Hand mit internationalen Marken an großartigen Lösungen für das Internet.
+            </h2>
+          </section>
+        </section>
+        <section >
+          <section>
+            <h1> <a href="https://github.com/factorial-io/fabalicious">Fabalicious</a></h1>
+            <h3>a short introduction</h3>
+          </section>
+          <section>
+            <h2>
+              Fabalicious is a swiss army knife for common (drupal) tasks like
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Reset an instance to a common state from code
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Deploy new code to an instance
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Backup files and databases and restore them again
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Copy remote database and files to another instance
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Run scripts before or after specific tasks
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Run scripts on the parent host to orchestrate docker or similar software
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Create SSH-tunnels to remote hosts
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Install and destroy instances with one command
+            </h2>
+            <p>
+             (e.g. for continuous integration)
+            </p>
+          </section>
+        </section>
+
+        <section data-background="#0096db">
+          <section>
+            <h1>
+              Installation
+            </h1>
+          </section>
+          <section>
+            <h2>
+              Based on <a href="http://www.fabfile.org">Fabric</a>
+            </h2>
+          </section>
+          <section data-markdown>
+            <script type="text/template">
+              ## Installation of Fabric
+
+              on Mac OS X:
+
+                  brew install python
+                  pip install fabric
+                  pip install pyyaml
+
+              on Debian/Ubuntu
+
+                  apt-get install python-pip
+                  pip install fabric
+                  pip install pyyaml
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="text/template">
+              ## Installation of fabalicious via composer:
+
+                  composer require factorial-io/fabalicious 2.*
+                  ln -s _tools/fabalicious/fabfile.py fabfile.py
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="test/template">
+              ## Installation of fabalicious via submodule
+
+                  mkdir _tools/fabalicious
+                  git submodule add https://github.com/factorial-io/fabalicious.git _tools/fabalicious
+                  ln -s _tools/fabalicious/fabfile.py fabfile.py
+
+            </script>
+          </section>
+        </section>
+        <section data-background="#00C58E">
+          <section>
+            <h1>
+              Usage
+            </h1>
+          </section>
+          <section data-markdown>
+            <script type="text/template">
+              ## Get a list of all commands
+
+                  fab --list
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="test/template">
+              ## Get a list of all configurations
+
+                  fab list
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="test/template">
+              ## Run a specific command
+
+                  fab config:<config> <command>
+
+              Fabalicious needs to know which configuration to use when runing a specific command.
+
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="test/template">
+            ## Basic structure of the fabfile.yaml
+
+            `fabfile.yaml` stores all your configuration. Its structure looks like this:
+
+                name: <the name of the project>
+                needs: <a list of needed functionality, called methods in fabalicios>
+                hosts:
+                  <host1>: ...
+                  <host2>: ...
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="test/template">
+            ## A simple Example
+
+                name: My demo project
+                needs:
+                  - git
+                  - drush8
+                  - composer
+
+                hosts:
+                  local:
+                    type: dev
+                    branch: master
+                    runLocally: true
+                    rootFolder: /home/user/project/web
+                    gitRootFolder: /home/user/project
+                    siteFolder: sites/default
+            </script>
+          </section>
+        </section>
+        <section data-background="#ff6f40">
+          <section>
+            <h1>
+              Concepts
+            </h1>
+          </section>
+          <section data-markdown>
+            <script type="test/template">
+            ## needs
+
+            Every host can define its "needs", what methods are needed, e.g. a typical drupal installations needs `drush`, `git`, `ssh` and maybe `composer`.
+
+            Available needs: `git`, `ssh`, `drush7`, `drush8`, `composer`, `drupalconsole`, `docker`, `files`, `scripts`, `platform`, `slack`
+          </script>
+          </section>
+          <section data-markdown>
+            <script type="test/template">
+            ## hook-a-like system
+
+            Every task can be enhanced with scripts, e.g. `resetPrepare`, `reset`, `resetFinished`
+
+                host:localhost
+                ...
+                resetPrepare:
+                  - echo "Preparing reset ..."
+                reset:
+                  - echo "Resetting ..."
+                resetFinished:
+                  - echo "Reset finished ..."
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="test/template">
+            ## type
+
+            Every host has a `type`, which controls the behavior. The following types are available: `dev`, `stage`, `prod` and `test`. You can add per-type-scripts, e.g.
+
+                common:
+                  resetPrepare:
+                    dev:
+                      - drush en -y devel
+                    prod:
+                      - drush dis -y devel
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="test/template">
+            ## Scripts and replacements
+
+            Scripts do support replacement patterns, which get replaced by the current configuration. Patterns are enclosed by `%`, and prefixed by their group. Some examples:
+
+                someGlobalConfig:
+                  foo: bar
+
+                host:
+                  example:
+                    host: example.dev
+                    port: 22
+                    branch: 22
+                    resetPrepare:
+                      - echo "Running resetprepare on host %host.example.host%, port %host.example.port%"
+                      - echo "Foo is %settings.someGlobalConfig.foo%"
+
+          </script>
+          </section>
+          <section data-markdown>
+            <script type="test/template">
+            ## Inheritance
+
+            Configuration can be inherited from existing configuration. Inheritance is supported for the whole file, `host`s and `dockerHosts`.
+
+            Some examples:
+
+                hosts:
+                  hostA:
+                    host: a.dev
+                    port: 22
+                    user: root
+                    branch: develop
+                  hostB:
+                    inheritsFrom: hostA
+                    branch: feature/b
+                  hostC:
+                    inheritsFrom:
+                      - http://some.tld/config.yaml
+                      - ./some/file.yaml
+                      - hostA
+            </script>
+          </section>
+          <section>
+            <h2>
+             SSH-tunnels
+            </h2>
+          </section>
+          <section>
+            <h2>
+             Docker support
+            </h2>
+          </section>
+          <section>
+            <h2>
+             Blueprints
+            </h2>
+          </section>
+          <section>
+            <h2>
+             Local overrides
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Internal commands
+            </h2>
+          </section>
+          <section>
+            <h2>
+              Platform.sh support
+            </h2>
+          </section>
+          <section>
+            <h2>
+              drupal console support
+            </h2>
+          </section>
+        </section>
+        <section>
+          <h1>
+            <div style="position: relative; height: 270px;">
+              <div style="width: 160px; height: 224px; position: absolute; left: 50%; top: 0; margin-left: -80px; ">
+                <div id="Logo-2"></div>
+              </div>
+            </div>
+            <a href="https://github.com/factorial-io/fabalicious">fabalicious</a>
+          </h1>
+        </section>
+
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+    <script src="js/build.js"></script>
+
+    <script>
+
+// Full list of configuration options available at:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+  controls: true,
+  progress: true,
+  history: true,
+  center: true,
+
+  transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+  // Optional reveal.js plugins
+  dependencies: [
+    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+    { src: 'plugin/zoom-js/zoom.js', async: true },
+    { src: 'plugin/notes/notes.js', async: true }
+  ]
+});
+
+    </script>
+
+  </body>
+</html>
